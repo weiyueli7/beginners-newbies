@@ -192,13 +192,13 @@ def age_score(df):
     plt.axvline(r, color='brown')
     plt.savefig('age_centered.png')
     
-age_score(clean_data)
+center_age = age_score(filtered)
 ```
 
 ![](./util/age_centered_png.png)
 
 ```python
-clean_data['age_c'] = abs(filtered['AGE'] - 45)
+clean_data['age_c'] = abs(filtered['AGE'] - center_age)
 clean_data.groupby('age_c').mean()['inc_cpi99'].plot(color='brown')
 plt.savefig('age_centered_plot.png')
 ```
