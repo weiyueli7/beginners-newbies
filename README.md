@@ -260,6 +260,15 @@ where the $mse$ is approximately $8.8\times 10^8$.
 Alternatively, we split our dataset into training data and test data, and apply `sklearn` linear regression:
 
 ```python
+raw_data = pd.read_csv('./data/beginner.csv')
+clean_data = raw_data[(raw_data["INCWAGE"] != 99999999.0) & (raw_data["INCWAGE"] != 0.0)]
+clean_data = clean_data.dropna(subset = ['INCWAGE'])
+clean_data = clean_data.dropna(how = 'all', axis = 1)
+clean_data = clean_data.drop(columns = ['HFLAG', 'ASECFLAG', 'MONTH', 'CPSID', 'SERIAL', 'CPSIDP'])
+q_low = clean_data["INCWAGE"].quantile(0.01)
+q_hi  = clean_data["INCWAGE"].quantile(0.99)
+clean_data = clean_data[(clean_data["INCWAGE"] < q_hi) & (clean_data["INCWAGE"] > q_low)]
+clean_data
 lst = ['WKSTAT', 'MARST', 'OCC', 'SEX', 'EMPSTAT', 'PERNUM', 'UHRSWORKT', 'AGE', 'EDUC']
 corr = clean_data.corr()['INCWAGE'].sort_values()      
 def encode(col):
@@ -270,31 +279,21 @@ def encode(col):
     clean_data[col] = clean_data[col].replace(log)
 for cols in lst:
     encode(cols)
-    
 model_data = clean_data[lst]
-
-X = model_data.to_numpy()
-y = clean_data['INCWAGE'].to_numpy()
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2)
-rng = np.random.RandomState(0)
-clf = Ridge(alpha = 0.01)
-clf.fit(X_train, y_train)
-model_err = mean_squared_error(clf.predict(X_test), y_test)
-clf.score(X_test, y_test), model_err
 ```
 
 > ```
-> (0.4393291289309824, 756640128.1068149)
+> (0.48600325169519576, 677191609.0338522)
 > ```
 
-where the accuracy is about $44$% and the error is $7.5 \times 10^8$.
+where the accuracy is about $48$% and the error is $6.7 \times 10^8$.
 
 ---
 
 ## 4. Conclusion
 
-Although our MSE is relatively high, we believe it is reasonable because it is hard for the model to predict accurately so that it could guess all decimals of the testing salaries. However, we were still able to reach above 20% accuracy on the testing set in most trials.
+Although our MSE is relatively high, we believe it is reasonable because it is hard for the model to predict accurately so that it could guess all decimals of the testing salaries. However, we were still able to reach above 48% accuracy on the testing set in most trials.
 
 A limitation on the dataset is that due to the nature of how this data was collected, most of our statistics obtained are solely from March and restricted to March. Such constraint limits us to explore further into factors like whether there exists a traceable pattern to define relationship between month and salary. 
 
-Additionally, the dataset raises challenges intrinsically when it contains almost at least one null value for each observation. While such circumstance would be often-time anticipated, it still introduces a limitation because I believe if we were to have less incomplete data, the accuracy of model trained would’ve been better. Also, some potential future improvement could be cleaning the data better.
+Additionally, the dataset raises challenges intrinsically when it contains almost at least one null value for each observation. While such circumstance would be often-time anticipated, it still introduces a limitation because we believe if we were to have less incomplete data, the accuracy of model trained would’ve been better. Also, some potential future improvement could be cleaning the data better.
