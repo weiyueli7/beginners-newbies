@@ -104,7 +104,7 @@ def clean_incwage(df):
     df.groupby('YEAR').mean()['INCWAGE'].plot(legend=True)
     df.groupby('YEAR').mean()['inc_cpi99'].plot(legend=True)
     
-clean_wage(filtered)
+clean_wage(clean_data)
 ```
 
 ![](./util/incwage_cpi99.png)
@@ -138,7 +138,7 @@ def display_categ(df):
     
     return fig, axs
 
-fig, axs = display_categ(filtered)
+fig, axs = display_categ(clean_data)
 ```
 
 ![](./util/factors_vs_inc.png)
@@ -154,10 +154,10 @@ Connected to our graph, Mean income in New England Division (11) and South Atlan
 We sort the region labels by the mean income value and give them ordinal numbers:
 
 ```python
-ser = filtered.groupby('REGION').mean()['inc_cpi99'].sort_values()
+ser = clean_data.groupby('REGION').mean()['inc_cpi99'].sort_values()
 region_ord = ser.reset_index()['REGION']
 region_ord = {region_ord.loc[i] : i  for i in region_ord.index}
-filtered['region_ord'] = filtered['REGION'].apply(lambda x : region_ord[x])
+clean_data['region_ord'] = clean_data['REGION'].apply(lambda x : region_ord[x])
 ```
 
 We apply the same approach to `RACE` and `OCC` columns.
@@ -192,14 +192,14 @@ def age_score(df):
     plt.axvline(r, color='brown')
     plt.savefig('age_centered.png')
     
-age_score(filtered)
+age_score(clean_data)
 ```
 
 ![](./util/age_centered_png.png)
 
 ```python
-filtered['age_c'] = abs(filtered['AGE'] - 45)
-filtered.groupby('age_c').mean()['inc_cpi99'].plot(color='brown')
+clean_data['age_c'] = abs(filtered['AGE'] - 45)
+clean_data.groupby('age_c').mean()['inc_cpi99'].plot(color='brown')
 plt.savefig('age_centered_plot.png')
 ```
 
@@ -238,7 +238,7 @@ def mse_with_vars(df, ob, vars, f=None) :
     return w, mse
 
 mse_with_vars(
-    filtered, 'inc_cpi99',
+    clean_data, 'inc_cpi99',
     ['region_ord', 'race_ord', 'age_c', 'SEX', 'EMPSTAT', 'occ_ord', 'UHRSWORKT', 'WKSTAT', 'EDUC']
 )
 ```
@@ -253,9 +253,48 @@ mse_with_vars(
 
 where the $mse$ is approximately $8.8\times 10^8$.
 
+
+
+### 3.2 Sklearn Linear Regression
+
+Alternatively, we split our dataset into training data and test data, and apply `sklearn` linear regression:
+
+```python
+from sklearn.linear_model import RidgeCV
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+from sklearn.linear_model import Ridge
+
+model_data = clean_data[['EDUC', 'AGE', 'WKSTAT']].astype(str)
+model_data = pd.get_dummies(data = model_data)
+
+X = model_data.to_numpy()
+y = clean_data['INCWAGE'].to_numpy()
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.1)
+
+model = LinearRegression(normalize = True)
+model.fit(X_train, y_train) 
+weight = model.coef_
+bias = model.intercept_
+X_predict = model.predict(X_test)
+model_error = mean_squared_error(y_test, X_predict)
+model.score(X_test, y_test), model_error
+
+clf = RidgeCV(alphas=[1e-3]).fit(X_train, y_train)
+clf.score(X_test, y_test), model_error
+```
+
+> ```
+> (0.23010189890711807, 2419350257.9956675)
+> ```
+
+where the accuracy is about $0.23$ and the error is $2.4 \times 10^9$.
+
 ---
 
 ## 4. Conclusion
 
+Although our MSE is relatively high, we believe it is reasonable because it is hard for the model to predict accurately so that it could guess all decimals of the testing salaries. However, we were still able to reach above 20% accuracy on the testing set in most trials.
 
-
+Some potential future improvement could be cleaning the data better.
