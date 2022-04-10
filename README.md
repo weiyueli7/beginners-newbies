@@ -260,36 +260,34 @@ where the $mse$ is approximately $8.8\times 10^8$.
 Alternatively, we split our dataset into training data and test data, and apply `sklearn` linear regression:
 
 ```python
-from sklearn.linear_model import RidgeCV
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
-from sklearn.linear_model import Ridge
-
-model_data = clean_data[['EDUC', 'AGE', 'WKSTAT']].astype(str)
-model_data = pd.get_dummies(data = model_data)
+lst = ['WKSTAT', 'MARST', 'OCC', 'SEX', 'EMPSTAT', 'PERNUM', 'UHRSWORKT', 'AGE', 'EDUC']
+corr = clean_data.corr()['INCWAGE'].sort_values()      
+def encode(col):
+    series = clean_data.groupby(col).median()['INCWAGE'].sort_values()
+    log = {}
+    for idx in series.index:
+        log[idx] = int(series[idx])
+    clean_data[col] = clean_data[col].replace(log)
+for cols in lst:
+    encode(cols)
+    
+model_data = clean_data[lst]
 
 X = model_data.to_numpy()
 y = clean_data['INCWAGE'].to_numpy()
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.1)
-
-model = LinearRegression(normalize = True)
-model.fit(X_train, y_train) 
-weight = model.coef_
-bias = model.intercept_
-X_predict = model.predict(X_test)
-model_error = mean_squared_error(y_test, X_predict)
-model.score(X_test, y_test), model_error
-
-clf = RidgeCV(alphas=[1e-3]).fit(X_train, y_train)
-clf.score(X_test, y_test), model_error
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2)
+rng = np.random.RandomState(0)
+clf = Ridge(alpha = 0.01)
+clf.fit(X_train, y_train)
+model_err = mean_squared_error(clf.predict(X_test), y_test)
+clf.score(X_test, y_test), model_err
 ```
 
 > ```
-> (0.23010189890711807, 2419350257.9956675)
+> (0.4393291289309824, 756640128.1068149)
 > ```
 
-where the accuracy is about $0.23$ and the error is $2.4 \times 10^9$.
+where the accuracy is about $44\%$ and the error is $7.5 \times 10^8$.
 
 ---
 
