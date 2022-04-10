@@ -147,7 +147,7 @@ fig, axs = display_categ(filtered)
 
 According to the IPUMS, region codes are:
 
-![](./util\region_code.png)
+![](./util/region_code.png)
 
 Connected to our graph, Mean income in New England Division (11) and South Atlantic Division (31) are higher, while East South Central Division (32) has the lowest mean. 
 
@@ -195,7 +195,7 @@ def age_score(df):
 age_score(filtered)
 ```
 
-![](.\util\age_centered_png.png)
+![](./util/age_centered_png.png)
 
 ```python
 filtered['age_c'] = abs(filtered['AGE'] - 45)
@@ -203,7 +203,7 @@ filtered.groupby('age_c').mean()['inc_cpi99'].plot(color='brown')
 plt.savefig('age_centered_plot.png')
 ```
 
-![](.\util\age_centered_plot.png)
+![](./util/age_centered_plot.png)
 
 
 
