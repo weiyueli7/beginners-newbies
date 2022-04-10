@@ -1,0 +1,8 @@
+pandas
+numpy
+sklearn
+pathlib
+matplotlib
+tqdm
+json
+seaborn
