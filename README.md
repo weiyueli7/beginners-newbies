@@ -287,7 +287,7 @@ clf.score(X_test, y_test), model_err
 > (0.4393291289309824, 756640128.1068149)
 > ```
 
-where the accuracy is about $44\%$ and the error is $7.5 \times 10^8$.
+where the accuracy is about $44$% and the error is $7.5 \times 10^8$.
 
 ---
 
