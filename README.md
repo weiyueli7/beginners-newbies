@@ -297,4 +297,6 @@ where the accuracy is about $0.23$ and the error is $2.4 \times 10^9$.
 
 Although our MSE is relatively high, we believe it is reasonable because it is hard for the model to predict accurately so that it could guess all decimals of the testing salaries. However, we were still able to reach above 20% accuracy on the testing set in most trials.
 
-Some potential future improvement could be cleaning the data better.
+A limitation on the dataset is that due to the nature of how this data was collected, most of our statistics obtained are solely from March and restricted to March. Such constraint limits us to explore further into factors like whether there exists a traceable pattern to define relationship between month and salary. 
+
+Additionally, the dataset raises challenges intrinsically when it contains almost at least one null value for each observation. While such circumstance would be often-time anticipated, it still introduces a limitation because I believe if we were to have less incomplete data, the accuracy of model trained would’ve been better. Also, some potential future improvement could be cleaning the data better.
