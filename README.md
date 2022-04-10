@@ -57,7 +57,7 @@ def clean_incwage(df):
 clean_wage(filtered)
 ```
 
-![](C:\Users\h2013\Documents\Files\College-ucsd\Coursework\SP22\datahack\beginners-newbies\util\incwage_cpi99.png)
+![](./util/incwage_cpi99.png)
 
 As shown, the adjusted values are more stable.
 
@@ -69,7 +69,7 @@ Then, after exploring these columns and the descriptions (e.g. https://cps.ipums
 ['REGION', 'RACE', 'AGE', 'SEX', 'EMPSTAT', 'OCC', 'UHRSWORKT', 'WKSTAT', 'EDUC']
 ```
 
-![](C:\Users\h2013\Documents\Files\College-ucsd\Coursework\SP22\datahack\beginners-newbies\util\factors_vs_inc.png)
+![](./util/factors_vs_inc.png)
 
 #### 3. Age
 
