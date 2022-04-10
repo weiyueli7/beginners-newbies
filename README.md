@@ -69,6 +69,25 @@ Then, after exploring these columns and the descriptions (e.g. https://cps.ipums
 ['REGION', 'RACE', 'AGE', 'SEX', 'EMPSTAT', 'OCC', 'UHRSWORKT', 'WKSTAT', 'EDUC']
 ```
 
+Visualize the relations between each factor and `INCWAGE` (note that some factors have the labels as codes) 
+
+```python
+indices = ['REGION', 'RACE', 'AGE', 'SEX', 'EMPSTAT', 'OCC', 'UHRSWORKT', 'WKSTAT', 'EDUC']
+    
+fig, axs = plt.subplots(4, 3, figsize=(20, 15), constrained_layout=False)
+
+for i in range(len(indices)):
+    ax = axs.flat[i]
+
+    it = indices[i]
+    ser = df.groupby(it).mean()['inc_cpi99']
+
+    ax.bar(list(map(str, ser.index)), ser.values.tolist())
+    ax.set_title(it)
+```
+
+
+
 ![](./util/factors_vs_inc.png)
 
 #### 3. Age
