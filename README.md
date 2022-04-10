@@ -292,7 +292,7 @@ where the accuracy is about $47$% and the error is $7.1 \times 10^8$.
 
 ## 4. Conclusion
 
-Although our MSE is relatively high, we believe it is reasonable because it is hard for the model to predict accurately so that it could guess all decimals of the testing salaries. However, we were still able to reach above 20% accuracy on the testing set in most trials.
+Although our MSE is relatively high, we believe it is reasonable because it is hard for the model to predict accurately so that it could guess all decimals of the testing salaries. However, we were still able to reach above 48% accuracy on the testing set in most trials.
 
 A limitation on the dataset is that due to the nature of how this data was collected, most of our statistics obtained are solely from March and restricted to March. Such constraint limits us to explore further into factors like whether there exists a traceable pattern to define relationship between month and salary. 
 
