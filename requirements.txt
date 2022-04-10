@@ -4,5 +4,4 @@ sklearn
 pathlib
 matplotlib
 tqdm
-json
 seaborn
